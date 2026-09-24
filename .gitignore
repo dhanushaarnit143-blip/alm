@@ -1,0 +1,35 @@
+# Root .gitignore
+node_modules/
+**/node_modules/
+
+# Environment files
+.env
+**/.env
+!.env.example
+!**/.env.example
+
+# Build outputs
+dist/
+**/dist/
+build/
+**/build/
+.angular/
+**/.angular/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE Files
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
