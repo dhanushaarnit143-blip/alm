@@ -2,11 +2,11 @@
 const dns = require('dns');
 const mongoose = require('mongoose');
 
-// Fallback to reliable public DNS resolvers if local ISP DNS fails SRV lookups (querySrv ECONNREFUSED)
-try {
-  dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
-} catch {
-  // Ignore in environments where setting servers is restricted
+// In local development on Windows, fallback to public DNS if ISP blocks SRV records
+if (process.env.NODE_ENV !== 'production') {
+  try {
+    dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+  } catch {}
 }
 
 /**
@@ -108,10 +108,7 @@ const connectDB = async (retries = 5, delay = 5000) => {
         await new Promise((resolve) => setTimeout(resolve, delay));
       } else {
         console.error(`🚨 [MongoDB] All ${retries} connection attempts exhausted.`);
-        if (process.env.NODE_ENV === 'production') {
-          console.error('Exiting process with failure code 1 to allow container orchestrator restart.');
-          process.exit(1);
-        }
+        console.error('   Server will remain running to serve health checks and retry on subsequent requests.');
       }
     }
   }
