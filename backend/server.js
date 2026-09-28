@@ -1,29 +1,39 @@
 // backend/server.js
+// 1. Explicitly load dotenv at the very top of execution
+const dotenv = require('dotenv');
+dotenv.config();
+
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 
-// Load environment variables
-dotenv.config();
+// Startup environment diagnostic banner
+console.log('================================================================');
+console.log('🚀 [STARTUP] Initializing College Alumni Management System (ALM)');
+console.log(`   Node Version: ${process.version}`);
+console.log(`   Environment:  ${process.env.NODE_ENV || 'development'}`);
+console.log(`   Port:         ${process.env.PORT || 5000}`);
+console.log(`   Client URL:   ${process.env.CLIENT_URL || 'http://localhost:4200'}`);
+console.log(`   Database URI: ${connectDB.maskMongoUri(process.env.MONGO_URI)}`);
+console.log('================================================================');
 
-// Connect to MongoDB
+// Connect to MongoDB with retry resilience
 connectDB();
 
 const app = express();
 
 // Enable CORS for frontend client
 const allowedOrigins = [
-  process.env.CLIENT_URL || 'http://localhost:4200',
+  process.env.CLIENT_URL,
   'http://localhost:4200',
   'http://127.0.0.1:4200'
-];
+].filter(Boolean);
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin || allowedOrigins.includes(origin) || allowedOrigins.length === 0) {
         return callback(null, true);
       }
       return callback(null, true);
@@ -43,6 +53,8 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'success',
     message: 'College Alumni Management System (ALM) Backend is operational',
+    env: process.env.NODE_ENV || 'development',
+    mongoStatus: ['Disconnected', 'Connected', 'Connecting', 'Disconnecting'][require('mongoose').connection.readyState] || 'Unknown',
     timestamp: new Date().toISOString()
   });
 });
