@@ -55,6 +55,7 @@ app.get('/api/health', (req, res) => {
     message: 'College Alumni Management System (ALM) Backend is operational',
     env: process.env.NODE_ENV || 'development',
     mongoStatus: ['Disconnected', 'Connected', 'Connecting', 'Disconnecting'][require('mongoose').connection.readyState] || 'Unknown',
+    dbUri: connectDB.maskMongoUri(process.env.MONGO_URI),
     timestamp: new Date().toISOString()
   });
 });

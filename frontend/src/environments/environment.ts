@@ -5,5 +5,7 @@ const isLocalhost =
 
 export const environment = {
   production: !isLocalhost,
-  apiUrl: isLocalhost ? 'http://localhost:5000/api' : '/api'
+  apiUrl: isLocalhost
+    ? 'http://localhost:5000/api'
+    : 'https://alm-backend-api.onrender.com/api'
 };
