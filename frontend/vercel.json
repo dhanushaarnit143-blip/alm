@@ -7,7 +7,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://alm-backend-api.onrender.com/api/:path*"
+      "destination": "https://alm-backend-api-bbbf.onrender.com/api/:path*"
     },
     {
       "source": "/(.*)",
