@@ -1,5 +1,13 @@
 // backend/config/db.js
+const dns = require('dns');
 const mongoose = require('mongoose');
+
+// Fallback to reliable public DNS resolvers if local ISP DNS fails SRV lookups (querySrv ECONNREFUSED)
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+} catch {
+  // Ignore in environments where setting servers is restricted
+}
 
 /**
  * Helper to mask sensitive credentials in MongoDB connection URI for safe logging.

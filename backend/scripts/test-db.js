@@ -1,7 +1,12 @@
 // backend/scripts/test-db.js
+const dns = require('dns');
 const path = require('path');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+} catch {}
 
 // Load environment variables from backend/.env
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
